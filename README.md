@@ -6,7 +6,7 @@ Esta es una aplicación simple construida con Vue.js que te permite agregar y mo
 
 Puedes revisar la [Demo en vivo aquí](http://18.191.69.236/) para ver la aplicación en funcionamiento.
 
-si le interesa ver la aplicacion backend puede hacerlo en el siguiente repositorio https://github.com/hectorcr1/gestor_videos
+sí le interesa ver la aplicación backend puede hacerlo en el siguiente repositorio https://github.com/hectorcr1/gestor_videos
 
 ## Capturas de pantalla
 
