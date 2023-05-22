@@ -1,6 +1,6 @@
 # Aplicación Vue para gestionar videos de Youtube
 
-Esta es una aplicación simple construida con Vue.js que te permite agregar y mostrar una lista de videos desde URL de YouTube. La aplicación cuenta con dos componentes principales: un formulario de entrada y una lista de videos agregados.
+Esta es una aplicación simple construida con Vue.js que te permite agregar y mostrar una lista de videos, lives o shorts desde URL de YouTube. La aplicación cuenta con dos componentes principales: un formulario de entrada y una lista de videos agregados.
 
 ## Demo
 
