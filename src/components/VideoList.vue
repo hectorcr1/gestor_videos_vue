@@ -1,0 +1,281 @@
+<template>
+    <center>
+
+        <div v-if="videos.length === 0" class="content-no-data">
+            <img src="../assets/no_content_illustration_v3.svg" alt="imagen">
+            <p><b>No hay videos disponibles.</b></p>
+            <p>Pega un enlace de YouTube en el buscador y luego da Clic al botón añadir..</p>
+        </div>
+
+        <div class="video-list">
+            <div class="video-item" v-for="video in videos" :key="video.id" @click="toggleModal(video)">
+                <div class="thumbnail-container">
+                    <img :src="video.thumbnail" alt="Video thumbnail" />
+                    <div class="overlay"  @click="deleteVideo(video, $event)">
+                        <button class="delete-button">
+                            x
+                        </button>
+                    </div>
+                    <div class="overlay-bottom">
+                        <div class="duration-button-container">
+                            {{ video.duration }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+
+    <Modal @close="toggleModal" :modalActive="modalActive">
+        <div class="modal-content">
+            <div class="video-container">
+                <iframe width="100%" height="100%" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="info-container">
+                <h3>{{videTitle}}</h3>
+                <div class="description">
+                <p>{{ videoDescription }}</p>
+                <!-- Más contenido de descripción aquí -->
+                </div>
+            </div>
+        </div>
+    </Modal>
+</template>
+  
+<script setup>
+
+import { ref } from 'vue';
+import Modal from "./Modal.vue";
+import 'vue3-toastify/dist/index.css';
+import { toast } from 'vue3-toastify';
+
+const props = defineProps({
+    videos: {
+        type: Array,
+        default: () => []
+    }
+});
+
+//const videos = ref(props.videos); //esto generaba problemas
+
+const deleteVideo = async (video, event) => {
+    event.stopPropagation();
+    console.log("video", video);
+    console.log("indexOf", props.videos.indexOf(video));
+    props.videos.splice(props.videos.indexOf(video), 1)
+
+    //eliminar de la base de datos
+    const response = await fetch(`${import.meta.env.VITE_SERVER_API}/videos/${video.id}`, {
+        method: 'DELETE'
+    })
+
+    const data = await response.json();
+
+    notify(data.message, 'success')
+}
+
+
+
+const modalActive = ref(false);
+
+const toggleModal = (video) => {
+    modalActive.value = !modalActive.value;
+
+    //validar que el modal se este abriendo para hacer la peticion
+    if (modalActive.value) {
+        getVideoInfo(video);
+    } else {
+        // Si el modal se está cerrando, pausar el video
+        embedUrl.value="";
+    }
+    
+
+};
+
+const videTitle = ref("");
+const videoDescription = ref("");
+const videoId = ref("");
+const embedUrl = ref("");
+
+const getVideoInfo = async (video) => {
+    //obtener informacion de un video y mostrarla en el Modal
+    const response = await fetch(`${import.meta.env.VITE_SERVER_API}/videos/${video.id}`, {
+         method: 'GET'
+    })
+
+    const data = await response.json();
+
+    videTitle.value = data.title;
+    videoDescription.value = data.description;
+
+    //obtgener el id de la url del video para mostrarlo en el iframe
+    videoId.value = video.url.split("v=")[1]
+    embedUrl.value = `https://www.youtube.com/embed/${videoId.value}`
+}
+
+
+const notify = (message, type) => {
+    if (type === 'success') {
+        toast.success(message, {
+            autoClose: 1000,
+        });
+    } else if (type === 'error') {
+        toast.error(message, {
+            autoClose: 1000,
+        });
+    } else if (type === 'info') {
+        toast.info(message, {
+            autoClose: 1000,
+        });
+    } else if (type === 'warning') {
+        toast.warning(message, {
+            autoClose: 1000,
+        });
+    } else if (type === 'default') {
+        toast(message, {
+            autoClose: 1000,
+        });
+    }
+    // ToastOptions
+}
+
+</script>
+
+<style scoped>
+.video-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    width: 80%;
+    padding-top: 100px;
+}
+
+.video-item {
+    background-color: #ececec;
+    max-width: 200px;
+    max-height: 100%;
+    cursor: pointer;
+}
+
+.thumbnail-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    /* Relación de aspecto 16:9 (9 dividido por 16, luego multiplicado por 100) */
+}
+
+.thumbnail-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    padding: 0px 6px 0px 6px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    width: auto;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 10%;
+}
+.overlay:hover {
+    padding: 0px 6px 0px 6px;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 1px 8px 1px 8px;
+    font-weight: bold;
+    margin: 3px;
+}
+
+
+.overlay-bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    padding: 0px 6px 0px 6px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    width: auto;
+    margin: 5px;
+}
+
+.duration {
+    font-size: 12px;
+}
+
+.duration-button-container {
+    align-self: flex-start;
+    font-size: 12px;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+    padding: 0;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .video-list {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .video-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Contenido del modal */
+
+.modal-content {
+    display: flex;
+    max-height: 100%;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* Proporción de aspecto 16:9 (dividir la altura por el ancho y multiplicar por 100) */
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+}
+
+.info-container {
+  width: 50%;
+  padding: 0 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.description {
+  max-height: 90%; /* Altura máxima de la descripción */
+  overflow: auto; /* Permitir desplazamiento vertical */
+}
+
+
+.content-no-data {
+    padding-top: 100px;
+}
+</style>
