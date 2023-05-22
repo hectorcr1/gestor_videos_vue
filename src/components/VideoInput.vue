@@ -160,7 +160,7 @@ input {
 }
 
 .boton-agregar {
-  padding: 0.8rem;
+  padding: 0.8rem 5rem 0.8rem 5rem;
   border-radius: 0 0.5rem 0.5rem 0;
   border: 1px solid #136ae4;
   background-color: #136ae4;
