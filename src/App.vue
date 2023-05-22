@@ -44,4 +44,6 @@ const addVideo = (videoUrl) => {
   min-width: 100%;
   /* background: #136AE4; */
 }
+
+
 </style>

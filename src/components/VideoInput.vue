@@ -142,36 +142,50 @@ function obtenerIDdeURL(url) {
 
 <style>
 .buscador {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 input {
-    padding: 0.8rem;
-    border-radius: 0.25rem 0 0 0.25rem;
-    background-color: white !important;
-    border: 1px solid #C6C6C6;
-    font-size: 1rem;
-    color: black;
-    padding-left: 1rem;
-    width: 70%;
+  padding: 0.8rem;
+  border-radius: 0.25rem 0 0 0.25rem;
+  background-color: white !important;
+  border: 1px solid #c6c6c6;
+  font-size: 1rem;
+  color: black;
+  padding-left: 1rem;
+  width: 100%;
+  /* Agrega más estilos si es necesario */
 }
 
 .boton-agregar {
-    padding: .8rem;
-    border-radius: 0 0.5rem 0.5rem 0;
-    border: 1px solid #136AE4;
-    background-color: #136AE4;
-    font-size: 1rem;
-    color: white;
-    box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
-    width: 30%;
+  padding: 0.8rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  border: 1px solid #136ae4;
+  background-color: #136ae4;
+  font-size: 1rem;
+  color: white;
+  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
+  width: auto;
+  /* Agrega más estilos si es necesario */
 }
 
 .error-message {
-    color: red;
+  color: red;
+  margin-top: 0.5rem;
+}
+
+/* Media queries para estilos responsivos */
+@media (min-width: 768px) {
+/*   .buscador {
+    flex-direction: column;
+  }
+
+  .boton-agregar {
     margin-top: 0.5rem;
+    width: 100%;
+    border-radius: 0.25rem;
+  } */
 }
 </style>
-

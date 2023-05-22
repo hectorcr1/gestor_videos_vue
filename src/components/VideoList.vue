@@ -11,7 +11,7 @@
             <div class="video-item" v-for="video in videos" :key="video.id" @click="toggleModal(video)">
                 <div class="thumbnail-container">
                     <img :src="video.thumbnail" alt="Video thumbnail" />
-                    <div class="overlay"  @click="deleteVideo(video, $event)">
+                    <div class="overlay" @click="deleteVideo(video, $event)">
                         <button class="delete-button">
                             x
                         </button>
@@ -32,10 +32,10 @@
                 <iframe width="100%" height="100%" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
             </div>
             <div class="info-container">
-                <h3>{{videTitle}}</h3>
+                <h3>{{ videTitle }}</h3>
                 <div class="description">
-                <p>{{ videoDescription }}</p>
-                <!-- Más contenido de descripción aquí -->
+                    <p>{{ videoDescription }}</p>
+                    <!-- Más contenido de descripción aquí -->
                 </div>
             </div>
         </div>
@@ -86,9 +86,9 @@ const toggleModal = (video) => {
         getVideoInfo(video);
     } else {
         // Si el modal se está cerrando, pausar el video
-        embedUrl.value="";
+        embedUrl.value = "";
     }
-    
+
 
 };
 
@@ -100,7 +100,7 @@ const embedUrl = ref("");
 const getVideoInfo = async (video) => {
     //obtener informacion de un video y mostrarla en el Modal
     const response = await fetch(`${import.meta.env.VITE_SERVER_API}/videos/${video.id}`, {
-         method: 'GET'
+        method: 'GET'
     })
 
     const data = await response.json();
@@ -148,6 +148,7 @@ const notify = (message, type) => {
     gap: 20px;
     width: 80%;
     padding-top: 100px;
+    margin-bottom: 40px;
 }
 
 .video-item {
@@ -155,6 +156,22 @@ const notify = (message, type) => {
     max-width: 200px;
     max-height: 100%;
     cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .video-item {
+        max-width: 100%;
+        /* background: #136AE4; */
+    }
+
+}
+
+@media (max-width: 1049px) {
+    .video-item {
+        max-width: 100%;
+        /* background: #136AE4; */
+    }
+
 }
 
 .thumbnail-container {
@@ -186,6 +203,7 @@ const notify = (message, type) => {
     cursor: pointer;
     border-radius: 10%;
 }
+
 .overlay:hover {
     padding: 0px 6px 0px 6px;
     background-color: rgba(0, 0, 0, 1);
@@ -239,7 +257,6 @@ const notify = (message, type) => {
 
 
 /* Contenido del modal */
-
 .modal-content {
     display: flex;
     max-height: 100%;
@@ -249,7 +266,6 @@ const notify = (message, type) => {
   width: 100%;
   height: 0;
   padding-bottom: 56.25%; /* Proporción de aspecto 16:9 (dividir la altura por el ancho y multiplicar por 100) */
-  overflow: hidden;
 }
 
 .video-container iframe {
@@ -274,8 +290,43 @@ h1 {
   overflow: auto; /* Permitir desplazamiento vertical */
 }
 
+/* Media queries para estilos responsivos */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column;
+    }
+
+    .video-container {
+        padding-bottom: 0;
+        /* Eliminar el padding inferior */
+        width: 100%;
+        /* Ancho completo */
+        height: auto;
+        /* Altura automática */
+    }
+
+    .info-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .video-container iframe {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .description {
+        max-height: 200px;
+        overflow: auto; /* Permitir desplazamiento vertical */
+        padding-right: 20px;
+    }
+
+}
+
 
 .content-no-data {
     padding-top: 100px;
-}
-</style>
+}</style>

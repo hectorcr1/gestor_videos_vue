@@ -29,6 +29,14 @@ h2 {
   
 }
 
+@media (max-width: 600px) {
+  #app {
+    min-width: 98%;
+    /* background: #136AE4; */
+  }
+
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
