@@ -43,7 +43,7 @@ const addVideo = async () => {
 
 
     //obtener los datos del video desde la api de youtube
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=AIzaSyCiRR5dqG0N7gMh_qbGfINvKlcAvsXX1qM&part=snippet&part=contentDetails`
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${import.meta.env.VITE_API_KEY}&part=snippet&part=contentDetails`
     const response = await fetch(url)
     const data = await response.json();
 
