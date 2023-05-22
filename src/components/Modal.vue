@@ -3,7 +3,6 @@
         <div v-show="modalActive" class="modal">
             <transition name="modal-animation-inner">
                 <div v-show="modalActive" class="modal-inner">
-                    <!-- <button @click="close" type="button">Close</button> -->
                     <i @click="close" class="fa-solid fa-xmark"></i>
                     <!-- Modal Content -->
                     <slot />                    
@@ -13,17 +12,18 @@
     </transition>
 </template>
 
-<script >
-export default {
-    props: ["modalActive"],
-    setup(props, { emit }) {
-        const close = () => {
-            emit("close");
-        };
+<script setup >
+// Prop enviado por el padre
+const props = defineProps({
+  modalActive: Boolean,
+  from: String,
+});
+const emit = defineEmits(['close'])
 
-        return { close };
-    },
+const close = () => {
+  emit('close');
 };
+
 </script>
 
 <style scoped>
@@ -75,8 +75,15 @@ export default {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     background-color: #fff;
     padding: 64px 16px;
+}
 
-
+.modal-inner-small {
+    position: relative;
+    width: 1200px;
+    height: 100px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background-color: #fff;
+    padding: 64px 16px;
 }
 
 i {

@@ -11,7 +11,7 @@
             <div class="video-item" v-for="video in videos" :key="video.id" @click="toggleModal(video)">
                 <div class="thumbnail-container">
                     <img :src="video.thumbnail" alt="Video thumbnail" />
-                    <div class="overlay" @click="deleteVideo(video, $event)">
+                    <div class="overlay" @click="toggleDeleteModal(video, $event)">
                         <button class="delete-button">
                             x
                         </button>
@@ -26,7 +26,7 @@
         </div>
     </center>
 
-    <Modal @close="toggleModal" :modalActive="modalActive">
+    <Modal @close="toggleModal" :modalActive="modalActive" from="modal-inner">
         <div class="modal-content">
             <div class="video-container">
                 <iframe width="100%" height="100%" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
@@ -38,6 +38,19 @@
                     <!-- Más contenido de descripción aquí -->
                 </div>
             </div>
+        </div>
+    </Modal>
+
+    <Modal @close="toggleDeleteModal(null)" :modalActive="deleteModalActive" from="modal-inner-small">
+        <div class="modal-content-video-delete">
+            <center>
+                <h3>¿Seguro de que quieres eliminar este video?</h3>
+                <br>
+                <div class="modal-buttons">
+                    <button class="modal-cancel" @click="toggleDeleteModal(null)">Cancelar</button>
+                    <button class="modal-confirm" @click="deleteVideo(videoToDelete, $event)">Eliminar</button>
+                </div>
+            </center>
         </div>
     </Modal>
 </template>
@@ -59,7 +72,6 @@ const props = defineProps({
 //const videos = ref(props.videos); //esto generaba problemas
 
 const deleteVideo = async (video, event) => {
-    event.stopPropagation();
     console.log("video", video);
     console.log("indexOf", props.videos.indexOf(video));
     props.videos.splice(props.videos.indexOf(video), 1)
@@ -69,6 +81,8 @@ const deleteVideo = async (video, event) => {
         method: 'DELETE'
     })
 
+    toggleDeleteModal(null);
+
     const data = await response.json();
 
     notify(data.message, 'success')
@@ -77,8 +91,13 @@ const deleteVideo = async (video, event) => {
 
 
 const modalActive = ref(false);
+const deleteModalActive = ref(false);
+const videoToDelete = ref(null);
+
+
 
 const toggleModal = (video) => {
+
     modalActive.value = !modalActive.value;
 
     //validar que el modal se este abriendo para hacer la peticion
@@ -89,6 +108,14 @@ const toggleModal = (video) => {
         embedUrl.value = "";
     }
 
+};
+
+const toggleDeleteModal = (video, event = false) => {
+    if (event) {
+        event.stopPropagation();
+    }
+    videoToDelete.value = video;
+    deleteModalActive.value = !deleteModalActive.value;
 
 };
 
@@ -261,33 +288,37 @@ const notify = (message, type) => {
     display: flex;
     max-height: 100%;
 }
+
 .video-container {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%; /* Proporción de aspecto 16:9 (dividir la altura por el ancho y multiplicar por 100) */
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    /* Proporción de aspecto 16:9 (dividir la altura por el ancho y multiplicar por 100) */
 }
 
 .video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
 }
 
 .info-container {
-  width: 50%;
-  padding: 0 20px;
+    width: 50%;
+    padding: 0 20px;
 }
 
 h1 {
-  text-align: center;
+    text-align: center;
 }
 
 .description {
-  max-height: 90%; /* Altura máxima de la descripción */
-  overflow: auto; /* Permitir desplazamiento vertical */
+    max-height: 90%;
+    /* Altura máxima de la descripción */
+    overflow: auto;
+    /* Permitir desplazamiento vertical */
 }
 
 /* Media queries para estilos responsivos */
@@ -320,13 +351,50 @@ h1 {
 
     .description {
         max-height: 200px;
-        overflow: auto; /* Permitir desplazamiento vertical */
+        overflow: auto;
+        /* Permitir desplazamiento vertical */
         padding-right: 20px;
     }
 
 }
 
 
+/* estils botones eliminar video */
+
+.modal-cancel {
+    background: white;
+    border: 1px solid #136ae4;
+    font-size: 16px;
+    color: #136ae4;
+    padding: 0;
+    cursor: pointer;
+    padding: 16px 100px 16px 100px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.modal-confirm {
+    color: white;
+    background-color: #136ae4;
+    border: 0px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 16px 100px 16px 100px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.modal-content-video-delete {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 150px;
+}
+
+
+
 .content-no-data {
     padding-top: 100px;
-}</style>
+}
+</style>
