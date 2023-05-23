@@ -18,7 +18,7 @@ const isLoading = ref(true);
 async function getMyVideos() {
   try {
     const response = await fetch(`${import.meta.env.VITE_SERVER_API}/videos`);
-
+    
     const data = await response.json();
     videos.value = data;
     isLoading.value = false;
@@ -42,7 +42,6 @@ const addVideo = (videoUrl) => {
 /* el contenedor debe res responsivo en pantallas grandes debe usar maximo el 80% de la pantallay en pantallas pequeñas debe usar el 100% */
 .contenedor {
   min-width: 100%;
-  /* background: #136AE4; */
 }
 
 

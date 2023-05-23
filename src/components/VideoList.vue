@@ -136,8 +136,21 @@ const getVideoInfo = async (video) => {
     videoDescription.value = data.description;
 
     //obtgener el id de la url del video para mostrarlo en el iframe
-    videoId.value = video.url.split("v=")[1]
-    embedUrl.value = `https://www.youtube.com/embed/${videoId.value}`
+    if (video.url.includes('youtu')) {
+        if (video.url.includes('youtu.be')) {
+            videoId.value = video.url.split('/').pop();
+        } else if (video.url.includes('youtube.com') && !video.url.includes('short')) {
+            videoId.value = video.url.split("v=")[1]
+        } else if (video.url.includes('shorts')) {
+            videoId = video.url.split('/').pop();
+        }
+        embedUrl.value = `https://www.youtube.com/embed/${videoId.value}`
+    }    
+    else {
+        console.log(data.url)
+        videoId.value = video.url.split(".com/")[1]
+        embedUrl.value = `https://player.vimeo.com/video/${videoId.value}?h=ee85426980&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=270341`
+    }
 }
 
 
